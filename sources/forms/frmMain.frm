@@ -181,9 +181,9 @@ Private Sub Form_Load()
     On Error GoTo error_handler
     
     ' // Subclass me
-    If Not SubclassWindow(Me) Then
-        Err.Raise 7, FULL_PROC_NAME, "SubclassWindow failed"
-    End If
+'    If Not SubclassWindow(Me) Then
+'        Err.Raise 7, FULL_PROC_NAME, "SubclassWindow failed"
+'    End If
         
     Set m_cFile = New CCASFile
     
@@ -361,7 +361,7 @@ Private Sub mnuOpen_Click()
     
     If Not CloseCurrentFile Then Exit Sub
     
-    sFileName = GetOpenFile(Me.hWnd, "Open file", "All supported files" & vbNullChar & "*.cas;*.txt;*.bas" & vbNullChar)
+    sFileName = GetOpenFile(Me.hWnd, "Open file", "All supported files" & vbNullChar & "*.cas;*.txt;*.bas;*.koi7" & vbNullChar)
     If Len(sFileName) = 0 Then Exit Sub
     
     m_cFile.Load sFileName
@@ -397,7 +397,8 @@ Private Function SaveCurrentFile( _
     
         sFileName = GetSaveFile(Me.hWnd, "Save file", "CAS files" & vbNullChar & "*.cas" & vbNullChar & _
                                 "Text files" & vbNullChar & "*.txt" & vbNullChar & _
-                                "BAS files" & vbNullChar & "*.bas" & vbNullChar, _
+                                "BAS files" & vbNullChar & "*.bas" & vbNullChar & _
+                                "KOI-7 N2 files" & vbNullChar & "*.koi7" & vbNullChar, _
                                 "cas", GetFileTitle(m_cFile.FileName))
         If Len(sFileName) = 0 Then Exit Function
     

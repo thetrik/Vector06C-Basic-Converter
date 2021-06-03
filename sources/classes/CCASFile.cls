@@ -65,7 +65,7 @@ Public Property Get Changed() As Boolean
     Changed = CalcHash <> m_lOriginalHash
 End Property
 
-' // Load a CAS/BAS/TXT file
+' // Load a CAS/BAS/TXT/LST file
 Public Sub Load( _
            ByRef sFileName As String)
     Const PROC_NAME = "Load", FULL_PROC_NAME = MODULE_NAME & "::" & PROC_NAME
@@ -101,10 +101,15 @@ Public Sub Load( _
         m_sProgramName = GetFileTitle(sFileName)
         
     Case ".bas"
+        
+        m_sSource = m_cParser.ConvertBasicDataToString(bFileData)
+        m_sProgramName = GetFileTitle(sFileName)
+        
+    Case ".koi7"
     
         m_sSource = Vec6KOI7ToUnicode(bFileData)
         m_sProgramName = GetFileTitle(sFileName)
-        
+    
     End Select
 
     m_sFileName = sFileName
@@ -112,7 +117,7 @@ Public Sub Load( _
     
 End Sub
 
-' // Save current data to CAS/BAS/TXT
+' // Save current data to CAS/BAS/TXT/LST
 Public Sub Save( _
            ByRef sFileName As String)
     Const PROC_NAME = "Save", FULL_PROC_NAME = MODULE_NAME & "::" & PROC_NAME
@@ -143,6 +148,14 @@ Public Sub Save( _
         End If
         
     Case ".bas"
+        
+        m_cParser.ConvertSourceToBasicData m_sSource, bBasicData
+        
+        If Not SaveArrayToFile(sFileName, bBasicData) Then
+            Err.Raise 75, FULL_PROC_NAME, "SaveArrayToFile failed"
+        End If
+        
+    Case ".koi7"
         
         bFileData = UnicodeToVec6KOI7(m_sSource)
         
