@@ -1,0 +1,20 @@
+[
+	uuid(A8344850-343E-42F5-AAD1-4B041A94C8D4),
+	version(1.00),
+	helpstring("Vector-06C BASIC converter type library by The trick")
+]
+library vec06basconv_tlb {
+	
+	importlib("stdole2.tlb");
+
+	#include "kernel32.inc"
+	#include "gdi32.inc"
+	#include "user32.inc"
+	#include "comctl32.inc"
+	#include "comdlg32.inc"
+	#include "advapi32.inc"
+	#include "oleaut32.inc"
+	#include "shlwapi.inc"
+	#include "msvbvm60.inc"
+	#include "subclass.inc"
+}
