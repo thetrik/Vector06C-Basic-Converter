@@ -181,9 +181,9 @@ Private Sub Form_Load()
     On Error GoTo error_handler
     
     ' // Subclass me
-'    If Not SubclassWindow(Me) Then
-'        Err.Raise 7, FULL_PROC_NAME, "SubclassWindow failed"
-'    End If
+    If Not SubclassWindow(Me) Then
+        Err.Raise 7, FULL_PROC_NAME, "SubclassWindow failed"
+    End If
         
     Set m_cFile = New CCASFile
     

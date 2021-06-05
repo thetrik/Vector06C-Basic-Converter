@@ -65,7 +65,7 @@ Public Property Get Changed() As Boolean
     Changed = CalcHash <> m_lOriginalHash
 End Property
 
-' // Load a CAS/BAS/TXT/LST file
+' // Load a CAS/BAS/TXT/KOI7 file
 Public Sub Load( _
            ByRef sFileName As String)
     Const PROC_NAME = "Load", FULL_PROC_NAME = MODULE_NAME & "::" & PROC_NAME
@@ -117,7 +117,7 @@ Public Sub Load( _
     
 End Sub
 
-' // Save current data to CAS/BAS/TXT/LST
+' // Save current data to CAS/BAS/TXT/KOI7
 Public Sub Save( _
            ByRef sFileName As String)
     Const PROC_NAME = "Save", FULL_PROC_NAME = MODULE_NAME & "::" & PROC_NAME

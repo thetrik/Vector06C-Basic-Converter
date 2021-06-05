@@ -35,11 +35,12 @@ Public Function ConvertBasicDataToString( _
                 ByRef bData() As Byte) As String
     Const PROC_NAME = "ConvertBasicDataToString", FULL_PROC_NAME = MODULE_NAME & "::" & PROC_NAME
     
-    Dim lIndex  As Long
-    Dim lMode   As Long
-    Dim lLine   As Long
-    Dim sRet    As String
-    Dim lSize   As Long
+    Dim lIndex      As Long
+    Dim lNextAddr   As Long
+    Dim lMode       As Long
+    Dim lLine       As Long
+    Dim sRet        As String
+    Dim lSize       As Long
     
     lSize = SACount(ArrPtr(bData))
     
@@ -49,8 +50,14 @@ Public Function ConvertBasicDataToString( _
         
         Select Case lMode
         Case 0  ' // Next line address low
+            lNextAddr = bData(lIndex)
             lMode = 1
         Case 1  ' // Next line address high
+        
+            lNextAddr = (bData(lIndex) * &H100&) Or lNextAddr
+            
+            If lNextAddr = 0 Then Exit Do
+            
             lMode = 2
         Case 2  ' // Line number parsing low
             lLine = bData(lIndex)
