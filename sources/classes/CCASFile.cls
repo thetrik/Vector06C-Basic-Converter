@@ -44,7 +44,7 @@ Public Property Get Source() As String
 End Property
 Public Property Let Source( _
                     ByRef sValue As String)
-    m_sSource = sValue
+    m_sSource = FixUnicode(sValue)
 End Property
 
 ' // Current program name

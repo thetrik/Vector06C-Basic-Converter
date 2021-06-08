@@ -1,3 +1,25 @@
+
+	typedef enum GMEM_FLAGS {
+		GMEM_FIXED = 0x0000,
+		GMEM_MOVEABLE = 0x0002,
+		GMEM_NOCOMPACT = 0x0010,
+		GMEM_NODISCARD = 0x0020,
+		GMEM_ZEROINIT = 0x0040,
+		GMEM_MODIFY = 0x0080,
+		GMEM_DISCARDABLE = 0x0100,
+		GMEM_NOT_BANKED = 0x1000,
+		GMEM_SHARE = 0x2000,
+		GMEM_DDESHARE = 0x2000,
+		GMEM_NOTIFY = 0x4000,
+		GMEM_LOWER = GMEM_NOT_BANKED,
+		GMEM_VALID_FLAGS = 0x7F72,
+		GMEM_INVALID_HANDLE = 0x8000,
+		GHND = 0x0042, // (GMEM_MOVEABLE | GMEM_ZEROINIT)
+		GPTR = 0x0040, // (GMEM_FIXED | GMEM_ZEROINIT),
+		GMEM_DISCARDED = 0x4000,
+		GMEM_LOCKCOUNT = 0x00FF
+	} GMEM_FLAGS;
+
 	typedef enum FILE_ATTRIBUTES_AND_FLAGS {
 
 		FILE_ATTRIBUTE_READONLY = 0x00000001,  
@@ -176,7 +198,7 @@
 			[in] void* lpMultiByteStr,
 			[in] long cchMultiByte,
 			[in] void* lpDefaultChar,
-			[in] long* lpUsedDefaultChar
+			[in] void* lpUsedDefaultChar
 		);
 
 		[entry("MultiByteToWideChar")]
@@ -229,6 +251,42 @@
 			[in] LPWSTR lpReturnedString,
 			[in] long nSize,
 			[in] LPWSTR lpFileName
+		);
+
+		[entry("GlobalAlloc")]
+		long GlobalAlloc(
+			[in] GMEM_FLAGS uFlags,
+			[in] long dwBytes
+		);
+
+		[entry("GlobalLock")]
+		long GlobalLock(
+			[in] long hMem
+		);
+
+		[entry("GlobalUnlock")]
+		long GlobalUnlock(
+			[in] long hMem
+		);
+
+		[entry("GlobalFree")]
+		long GlobalFree(
+			[in] long hMem
+		);
+
+		[entry("GlobalSize")]
+		long GlobalSize(
+			[in] long hMem
+		);
+
+		[entry("LocalLock")]
+		long LocalLock(
+			[in] long hMem
+		);
+
+		[entry("LocalUnlock")]
+		long LocalUnlock(
+			[in] long hMem
 		);
 
 	}

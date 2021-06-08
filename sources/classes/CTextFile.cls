@@ -97,7 +97,7 @@ Public Function SaveTextFile( _
 
         If Len(m_sContent) Then
         
-            lSize = WideCharToMultiByte(lCodePage, 0, ByVal StrPtr(m_sContent), Len(m_sContent), ByVal 0&, 0, ByVal 0&, 0)
+            lSize = WideCharToMultiByte(lCodePage, 0, ByVal StrPtr(m_sContent), Len(m_sContent), ByVal 0&, 0, ByVal 0&, ByVal 0&)
             If lSize = 0 Then
                 Err.Raise 7, FULL_PROC_NAME, "WideCharToMultiByte failed"
             End If
@@ -106,7 +106,7 @@ Public Function SaveTextFile( _
             
             ReDim bData(lTotalSize - 1)
             
-            If WideCharToMultiByte(lCodePage, 0, ByVal StrPtr(m_sContent), Len(m_sContent), bData(lIndex), lSize, ByVal 0&, 0) = 0 Then
+            If WideCharToMultiByte(lCodePage, 0, ByVal StrPtr(m_sContent), Len(m_sContent), bData(lIndex), lSize, ByVal 0&, ByVal 0&) = 0 Then
                 Err.Raise 7, FULL_PROC_NAME, "WideCharToMultiByte failed"
             End If
 

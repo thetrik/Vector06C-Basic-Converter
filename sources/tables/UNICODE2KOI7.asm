@@ -40,6 +40,8 @@ put 0xa4, '$'
 ; Cyrillic
 put 0x410, 'a', 'b', 'w', 'g', 'd', 'e', 'v', 'z', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', \
 	   'r', 's', 't', 'u', 'f', 'h', 'c', '~', '{', '}', 'x', 'y', 'x', '|', '`', 'q'
+put 0x430, 'a', 'b', 'w', 'g', 'd', 'e', 'v', 'z', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', \
+	   'r', 's', 't', 'u', 'f', 'h', 'c', '~', '{', '}', 'x', 'y', 'x', '|', '`', 'q'
 put 0x263a, 1, 2  ; Smiles
 put_multiple 3, 0x2665, 0x2764, 0x2661	; Heart
 put_multiple 4, 0x25C6, 0x2666, 0x25C7, 0x2662, 0x2BC1	; Diamond

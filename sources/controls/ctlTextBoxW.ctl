@@ -1,6 +1,7 @@
 VERSION 5.00
 Begin VB.UserControl ctlTextBox 
    BackColor       =   &H80000005&
+   CanGetFocus     =   0   'False
    ClientHeight    =   3600
    ClientLeft      =   0
    ClientTop       =   0
@@ -21,6 +22,12 @@ Attribute VB_Exposed = False
 
 Option Explicit
 Option Base 0
+
+Public Event OnCopy()
+Public Event OnPaste()
+Public Event OnCut()
+
+Implements ISubclass
 
 Private WithEvents m_cFont As StdFont
 Attribute m_cFont.VB_VarHelpID = -1
@@ -63,6 +70,10 @@ Public Property Set Font( _
     Set m_cFont = cValue
     UpdateFont
     PropertyChanged "Font"
+End Property
+
+Public Property Get hWnd() As Long
+    hWnd = m_hWnd
 End Property
 
 Public Property Get Text() As String
@@ -120,9 +131,68 @@ Public Property Let SelText( _
     SendMessage m_hWnd, EM_REPLACESEL, 1, ByVal StrPtr(sValue)
 End Property
 
+Public Property Get SelText() As String
+    Dim lCurStart   As Long
+    Dim lCurEnd     As Long
+    Dim lSize       As Long
+    Dim hMem        As Long
+    Dim pText       As Long
+    
+    SendMessage m_hWnd, EM_GETSEL, VarPtr(lCurStart), lCurEnd
+    
+    lSize = lCurEnd - lCurStart
+    
+    If lSize > 0 Then
+        
+        hMem = SendMessage(m_hWnd, EM_GETHANDLE, 0, ByVal 0&)
+        
+        If hMem Then
+            
+            pText = LocalLock(hMem)
+            
+            If pText Then
+                
+                SelText = Space$(lSize)
+                memcpy ByVal StrPtr(SelText), ByVal pText + lCurStart * 2, lSize * 2
+                LocalUnlock hMem
+                
+            End If
+            
+        End If
+        
+    End If
+    
+End Property
+
 Public Sub SelectAll()
     SendMessage m_hWnd, EM_SETSEL, 0, ByVal -1&
 End Sub
+
+Private Property Get ISubclass_hWnd() As Long
+    ISubclass_hWnd = m_hWnd
+End Property
+
+Private Function ISubclass_OnWindowProc( _
+                 ByVal hWnd As Long, _
+                 ByVal lMsg As Long, _
+                 ByVal wParam As Long, _
+                 ByVal lParam As Long, _
+                 ByRef bDefCall As Boolean) As Long
+        
+    bDefCall = False
+    
+    Select Case lMsg
+    Case WM_COPY
+        RaiseEvent OnCopy
+    Case WM_CUT
+        RaiseEvent OnCut
+    Case WM_PASTE
+        RaiseEvent OnPaste
+    Case Else
+        bDefCall = True
+    End Select
+        
+End Function
 
 Private Sub m_cFont_FontChanged( _
             ByVal PropertyName As String)
@@ -165,6 +235,7 @@ Private Sub UserControl_Initialize()
                             ES_AUTOVSCROLL Or ES_MULTILINE Or ES_WANTRETURN Or WS_VSCROLL, _
                             0, 0, UserControl.ScaleWidth, UserControl.ScaleHeight, UserControl.hWnd, 0, App.hInstance, ByVal 0&)
     SendMessage m_hWnd, EM_LIMITTEXT, 0, ByVal 0&
+    SubclassWindow Me
     
 End Sub
 
@@ -191,9 +262,13 @@ Private Sub UserControl_ReadProperties( _
 End Sub
 
 Private Sub UserControl_Terminate()
+    
+    UnsubclassWindow Me
+
     If m_hActualFont Then
         DeleteObject m_hActualFont
     End If
+    
 End Sub
 
 Private Sub UserControl_WriteProperties( _

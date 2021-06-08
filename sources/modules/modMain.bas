@@ -176,6 +176,26 @@ error_handler:
     
 End Property
 
+' // Convert UNICODE text to UNICODE with allowed characters
+Public Function FixUnicode( _
+                ByRef sValue As String) As String
+    Const PROC_NAME = "FixUnicode", FULL_PROC_NAME = MODULE_NAME & "::" & PROC_NAME
+    
+    Dim bKOI()  As Byte
+    
+    On Error GoTo error_handler
+    
+    bKOI = UnicodeToVec6KOI7(sValue)
+    FixUnicode = Vec6KOI7ToUnicode(bKOI)
+    
+    Exit Function
+    
+error_handler:
+    
+    ThrowCurrentErrorUp FULL_PROC_NAME
+    
+End Function
+
 ' // Convert token to keyword or symbol
 Public Function Vec6BasicKeyword( _
                 ByVal bCode As Byte) As String

@@ -12,7 +12,6 @@ Begin VB.Form frmMain
    Begin Vector06CBasic.ctlTextBox ctlTextBox 
       Height          =   4335
       Left            =   60
-      TabIndex        =   0
       Top             =   60
       Width           =   5415
       _ExtentX        =   9551
@@ -148,6 +147,136 @@ Public Sub SetTextboxFontSize( _
 error_handler:
     
     ThrowCurrentErrorUp FULL_PROC_NAME
+    
+End Sub
+
+' // Replace copying procedure to replace forbidden symbols with spaces
+Private Sub ctlTextBox_OnCopy()
+    Const PROC_NAME = "ctlTextBox_OnCopy", FULL_PROC_NAME = MODULE_NAME & "::" & PROC_NAME
+    
+    Dim sText   As String
+    Dim lSize   As Long
+    Dim hMem    As Long
+    Dim pData   As Long
+    Dim bOpened As Boolean
+    
+    On Error GoTo error_handler
+    
+    ' // Convert all to Upperbound
+    sText = FixUnicode(ctlTextBox.SelText)
+
+    If OpenClipboard(ctlTextBox.hWnd) = 0 Then
+        Err.Raise 7, FULL_PROC_NAME, "OpenClipboard failed"
+    End If
+    
+    bOpened = True
+    
+    If EmptyClipboard() = 0 Then
+        Err.Raise 7, FULL_PROC_NAME, "EmptyClipboard failed"
+    End If
+    
+    lSize = LenB(sText)
+    
+    If lSize > 0 Then
+        
+        hMem = GlobalAlloc(GMEM_MOVEABLE, lSize + 2)
+        
+        If hMem Then
+            
+            pData = GlobalLock(hMem)
+            
+            If pData Then
+                memcpy ByVal pData, ByVal StrPtr(sText), LenB(sText) + 2
+            Else
+                GlobalFree hMem
+                Err.Raise 7, FULL_PROC_NAME, "GlobalLock failed"
+            End If
+            
+            GlobalUnlock hMem
+            
+            If SetClipboardData(CF_UNICODETEXT, hMem) = 0 Then
+                GlobalFree hMem
+                Err.Raise 7, FULL_PROC_NAME, "SetClipboardData failed"
+            End If
+            
+        Else
+            Err.Raise 7, FULL_PROC_NAME, "GlobalAlloc failed"
+        End If
+        
+    End If
+    
+    CloseClipboard
+    
+    Exit Sub
+    
+error_handler:
+    
+    If bOpened Then
+        CloseClipboard
+    End If
+    
+    ShowCurrentError
+    
+End Sub
+
+Private Sub ctlTextBox_OnCut()
+    ctlTextBox_OnCopy
+    ctlTextBox.SelText = vbNullString
+End Sub
+
+' // Replace pasting procedure
+Private Sub ctlTextBox_OnPaste()
+    Const PROC_NAME = "ctlTextBox_OnPaste", FULL_PROC_NAME = MODULE_NAME & "::" & PROC_NAME
+    
+    Dim sText   As String
+    Dim lSize   As Long
+    Dim hMem    As Long
+    Dim pData   As Long
+    Dim bOpened As Boolean
+    
+    On Error GoTo error_handler
+    
+    If IsClipboardFormatAvailable(CF_UNICODETEXT) = 0 Then Exit Sub
+
+    If OpenClipboard(ctlTextBox.hWnd) = 0 Then
+        Err.Raise 7, FULL_PROC_NAME, "OpenClipboard failed"
+    End If
+    
+    bOpened = True
+    
+    hMem = GetClipboardData(CF_UNICODETEXT)
+    If hMem = 0 Then
+        Err.Raise 7, FULL_PROC_NAME, "GetClipboardData failed"
+    End If
+    
+    pData = GlobalLock(hMem)
+    If pData = 0 Then
+        Err.Raise 7, FULL_PROC_NAME, "GlobalLock failed"
+    End If
+    
+    lSize = lstrlenW(ByVal pData)
+    
+    If lSize > 0 Then
+        
+        sText = Space$(lSize)
+        memcpy ByVal StrPtr(sText), ByVal pData, lSize * 2
+        GlobalUnlock hMem
+                
+        ctlTextBox.SelText = FixUnicode(sText)
+                
+    End If
+    
+    CloseClipboard
+    
+    Exit Sub
+    
+error_handler:
+    
+    If bOpened Then
+        CloseClipboard
+    End If
+    
+    ShowCurrentError
     
 End Sub
 
