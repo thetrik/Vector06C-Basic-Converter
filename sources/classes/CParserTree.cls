@@ -116,8 +116,13 @@ Public Function PutSymbol( _
                         Exit Function
                         
                     Else
-
-                        m_lCurIndex = m_tItems(m_lCurIndex).lChildren(lIndex)
+                        
+                        If m_bRemData Then
+                            Exit For
+                        Else
+                            m_lCurIndex = m_tItems(m_lCurIndex).lChildren(lIndex)
+                        End If
+                        
                         Exit Function
                         
                     End If
