@@ -86,7 +86,7 @@ Public Function PutSymbol( _
         Exit Function
 
     Else
-    
+        
         For lIndex = 0 To m_tItems(m_lCurIndex).lCount - 1
             With m_tItems(m_tItems(m_lCurIndex).lChildren(lIndex))
                 If .bSymbol = bSymbol Then
@@ -117,7 +117,7 @@ Public Function PutSymbol( _
                         
                     Else
                         
-                        If m_bRemData Then
+                        If m_bRemData Or m_bInQuote Then
                             Exit For
                         Else
                             m_lCurIndex = m_tItems(m_lCurIndex).lChildren(lIndex)

@@ -77,7 +77,7 @@ Public Function ConvertBasicDataToString( _
             Case Is <= 228
                 sRet = sRet & Vec6BasicKeyword(bData(lIndex))
             Case Else
-                Stop    ' // Unexpected
+                sRet = sRet & Chr$(bData(lIndex))
             End Select
             
         End Select

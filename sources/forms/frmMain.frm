@@ -14,17 +14,9 @@ Begin VB.Form frmMain
       Left            =   60
       Top             =   60
       Width           =   5415
-      _ExtentX        =   9551
-      _ExtentY        =   7646
-      BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
-         Name            =   "Vector06C"
-         Size            =   6
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
+      _extentx        =   9551
+      _extenty        =   7646
+      font            =   "frmMain.frx":0442
    End
    Begin VB.Menu mnuFile 
       Caption         =   "&File"
@@ -305,7 +297,7 @@ error_handler:
 End Sub
 
 Private Sub Form_Load()
-    Const PROC_NAME = "Form_Initialize", FULL_PROC_NAME = MODULE_NAME & "::" & PROC_NAME
+    Const PROC_NAME = "Form_Load", FULL_PROC_NAME = MODULE_NAME & "::" & PROC_NAME
 
     On Error GoTo error_handler
     
